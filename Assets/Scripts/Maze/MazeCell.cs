@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class MazeCell
 {
@@ -38,8 +38,7 @@ public class MazeCell
 
         if(neighbours.Count > 0)
         {
-            Random random = new Random();
-            int index = random.Next(0, neighbours.Count);
+            int index = Random.Range(0, neighbours.Count);
             return neighbours[index];
         }
         return null;

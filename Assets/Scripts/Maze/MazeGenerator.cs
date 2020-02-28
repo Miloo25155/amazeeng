@@ -20,6 +20,10 @@ public class MazeGenerator : MonoBehaviour
     public GameObject RightWallPrefab;
     public GameObject LeftWallPrefab;
 
+    public void Start()
+    {
+        GenerateMaze();
+    }
 
     public void GenerateMaze()
     {
