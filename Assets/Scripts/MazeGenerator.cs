@@ -11,18 +11,15 @@ public class MazeGenerator : MonoBehaviour
     [Range(1, 10)]
     public int floors;
 
-    public Transform mazeContainer;
+    public Transform MazeContainer;
 
-    public GameObject fullCellPrefab;
+    public GameObject FloorCellPrefab;
 
-    public GameObject verticalWayPrefab;
-    public GameObject horizontalWayPrefab;
+    public GameObject TopWallPrefab;
+    public GameObject BottomWallPrefab;
+    public GameObject RightWallPrefab;
+    public GameObject LeftWallPrefab;
 
-    public GameObject topRightPrefab;
-    public GameObject topLeftPrefab;
-
-    public GameObject bottomRightPrefab;
-    public GameObject bottomLeftPrefab;
 
     public void GenerateMaze()
     {
@@ -37,43 +34,37 @@ public class MazeGenerator : MonoBehaviour
             {
                 MazeCell cell = cells[x, y];
                 Vector3 position = new Vector3(cell.X, 0, cell.Y);
-                GameObject prefabToUse = fullCellPrefab;
 
-                if (cell.BottomWall && cell.TopWall)
-                {                                       ///   _______
-                    prefabToUse = horizontalWayPrefab;  ///   
-                }                                       ///   _______
-                else if (cell.LeftWall && cell.RightWall)
-                {                                       ///   |      |
-                    prefabToUse = verticalWayPrefab;    ///   |      |
-                }                                       ///   |      |
-                else if (cell.TopWall && cell.RightWall)
-                {                                       ///    ______
-                    prefabToUse = topRightPrefab;       ///          |
-                }                                       ///          |
-                else if (cell.LeftWall && cell.BottomWall)
-                {                                       ///    |
-                    prefabToUse = bottomLeftPrefab;     ///    |
-                }                                       ///    |______
-                else if (cell.BottomWall && cell.RightWall)
-                {                                       ///           |
-                    prefabToUse = bottomRightPrefab;    ///           |
-                }                                       ///     ______|
-                else if (cell.LeftWall && cell.TopWall)
-                {                                       ///     _______
-                    prefabToUse = topLeftPrefab;        ///     |
-                }                                       ///     |
+                GameObject cellObject = new GameObject("cell_" + cell.X + "/" + cell.Y);
+                cellObject.transform.parent = MazeContainer;
+                cellObject.transform.position = position;
 
-                Instantiate(prefabToUse, position, Quaternion.identity, mazeContainer);
+                Instantiate(FloorCellPrefab, position, Quaternion.identity, cellObject.transform);
+                if (cell.TopWall)
+                {
+                    Instantiate(TopWallPrefab, position, Quaternion.identity, cellObject.transform);
+                }
+                if (cell.RightWall)
+                {
+                    Instantiate(RightWallPrefab, position, Quaternion.identity, cellObject.transform);
+                }
+                if (cell.BottomWall)
+                {
+                    Instantiate(BottomWallPrefab, position, Quaternion.identity, cellObject.transform);
+                }
+                if (cell.LeftWall)
+                {
+                    Instantiate(LeftWallPrefab, position, Quaternion.identity, cellObject.transform);
+                }
             }
         }
     }
 
     public void Reset()
     {
-        for (int i = transform.childCount - 1; i >= 0; i--)
+        for (int i = MazeContainer.childCount - 1; i >= 0; i--)
         {
-            DestroyImmediate(transform.GetChild(i).gameObject);
+            DestroyImmediate(MazeContainer.GetChild(i).gameObject);
         }
     }
 }
