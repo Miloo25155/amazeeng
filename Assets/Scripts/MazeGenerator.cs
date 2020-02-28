@@ -43,23 +43,23 @@ public class MazeGenerator : MonoBehaviour
                 {                                       ///   _______
                     prefabToUse = horizontalWayPrefab;  ///   
                 }                                       ///   _______
-                if (cell.LeftWall && cell.RightWall)
+                else if (cell.LeftWall && cell.RightWall)
                 {                                       ///   |      |
                     prefabToUse = verticalWayPrefab;    ///   |      |
                 }                                       ///   |      |
-                if (cell.TopWall && cell.RightWall)
+                else if (cell.TopWall && cell.RightWall)
                 {                                       ///    ______
                     prefabToUse = topRightPrefab;       ///          |
                 }                                       ///          |
-                if (cell.LeftWall && cell.BottomWall)
+                else if (cell.LeftWall && cell.BottomWall)
                 {                                       ///    |
                     prefabToUse = bottomLeftPrefab;     ///    |
                 }                                       ///    |______
-                if (cell.BottomWall && cell.RightWall)
+                else if (cell.BottomWall && cell.RightWall)
                 {                                       ///           |
                     prefabToUse = bottomRightPrefab;    ///           |
                 }                                       ///     ______|
-                if (cell.LeftWall && cell.TopWall)
+                else if (cell.LeftWall && cell.TopWall)
                 {                                       ///     _______
                     prefabToUse = topLeftPrefab;        ///     |
                 }                                       ///     |
@@ -71,9 +71,9 @@ public class MazeGenerator : MonoBehaviour
 
     public void Reset()
     {
-        foreach (Transform child in mazeContainer.transform)
+        for (int i = transform.childCount - 1; i >= 0; i--)
         {
-            DestroyImmediate(child.gameObject);
+            DestroyImmediate(transform.GetChild(i).gameObject);
         }
     }
 }

@@ -39,7 +39,7 @@ public class MazeCell
         if(neighbours.Count > 0)
         {
             Random random = new Random();
-            int index = random.Next(0, neighbours.Count - 1);
+            int index = random.Next(0, neighbours.Count);
             return neighbours[index];
         }
         return null;
