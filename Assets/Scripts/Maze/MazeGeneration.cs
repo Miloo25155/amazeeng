@@ -48,4 +48,9 @@ public static class MazeGeneration
             RecursivePass(back);
         }
     }
+
+    public static void GenerateFloorPassages(List<MazeCell[,]> floors)
+    {
+
+    }
 }

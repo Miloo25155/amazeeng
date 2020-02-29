@@ -11,7 +11,7 @@ public class MazeGenerator : MonoBehaviour
     [Range(1, 10)]
     public int floors;
 
-    public Transform MazeContainer;
+    public Transform LevelContainer;
 
     public GameObject FloorCellPrefab;
 
@@ -22,43 +22,63 @@ public class MazeGenerator : MonoBehaviour
 
     public void Start()
     {
-        GenerateMaze();
+        GenerateLevels();
     }
 
-    public void GenerateMaze()
+    public void GenerateLevels()
     {
         this.Reset();
 
-        GameObject[,] maze = new GameObject[width, height];
-        MazeCell[,] cells = MazeGeneration.GenerateMaze(width, height);
-
-        for (int x = 0; x < cells.GetLength(0); x++)
+        List<MazeCell[,]> levels = new List<MazeCell[,]>(floors);
+        for (int i = 0; i < floors; i++)
         {
-            for (int y = 0; y < cells.GetLength(1); y++)
+            MazeCell[,] floor = MazeGeneration.GenerateMaze(width, height);
+            levels.Add(floor);
+        }
+
+        MazeGeneration.GenerateFloorPassages(levels);
+
+        this.InstantiateLevels(levels);
+    }
+
+    public void InstantiateLevels(List<MazeCell[,]> levels)
+    {
+        for (int l = 0; l < levels.Count; l++)
+        {
+            MazeCell[,] cells = levels[l];
+
+            GameObject levelObject = new GameObject("level_" + l);
+            levelObject.transform.parent = LevelContainer;
+            levelObject.transform.position = new Vector3(-width / 2, l, -height / 2);
+
+            for (int x = 0; x < cells.GetLength(0); x++)
             {
-                MazeCell cell = cells[x, y];
-                Vector3 position = new Vector3(cell.X, 0, cell.Y);
+                for (int y = 0; y < cells.GetLength(1); y++)
+                {
+                    MazeCell cell = cells[x, y];
+                    Vector3 position = new Vector3(cell.X, 0, cell.Y);
 
-                GameObject cellObject = new GameObject("cell_" + cell.X + "/" + cell.Y);
-                cellObject.transform.parent = MazeContainer;
-                cellObject.transform.position = position;
+                    GameObject cellObject = new GameObject("cell_" + cell.X + "/" + cell.Y);
+                    cellObject.transform.parent = levelObject.transform;
+                    cellObject.transform.localPosition = position;
 
-                Instantiate(FloorCellPrefab, position, Quaternion.identity, cellObject.transform);
-                if (cell.TopWall)
-                {
-                    Instantiate(TopWallPrefab, position, Quaternion.identity, cellObject.transform);
-                }
-                if (cell.RightWall)
-                {
-                    Instantiate(RightWallPrefab, position, Quaternion.identity, cellObject.transform);
-                }
-                if (cell.BottomWall)
-                {
-                    Instantiate(BottomWallPrefab, position, Quaternion.identity, cellObject.transform);
-                }
-                if (cell.LeftWall)
-                {
-                    Instantiate(LeftWallPrefab, position, Quaternion.identity, cellObject.transform);
+                    Instantiate(FloorCellPrefab, cellObject.transform, false);
+                    if (cell.TopWall)
+                    {
+                        Instantiate(TopWallPrefab, cellObject.transform, false);
+                    }
+                    if (cell.RightWall)
+                    {
+                        Instantiate(RightWallPrefab, cellObject.transform, false);
+                    }
+                    if (cell.BottomWall)
+                    {
+                        Instantiate(BottomWallPrefab, cellObject.transform, false);
+                    }
+                    if (cell.LeftWall)
+                    {
+                        Instantiate(LeftWallPrefab, cellObject.transform, false);
+                    }
                 }
             }
         }
@@ -66,9 +86,9 @@ public class MazeGenerator : MonoBehaviour
 
     public void Reset()
     {
-        for (int i = MazeContainer.childCount - 1; i >= 0; i--)
+        for (int i = LevelContainer.childCount - 1; i >= 0; i--)
         {
-            DestroyImmediate(MazeContainer.GetChild(i).gameObject);
+            DestroyImmediate(LevelContainer.GetChild(i).gameObject);
         }
     }
 }

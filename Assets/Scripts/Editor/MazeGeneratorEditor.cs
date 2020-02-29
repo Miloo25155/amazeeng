@@ -11,9 +11,9 @@ public class MazeGeneratorEditor : Editor
         MazeGenerator generator = (MazeGenerator)target;
 
         GUILayout.BeginHorizontal();
-            if(GUILayout.Button("Generate maze"))
+            if(GUILayout.Button("Generate level"))
             {
-                generator.GenerateMaze();
+                generator.GenerateLevels();
             }
             if (GUILayout.Button("Reset"))
             {
